@@ -1,5 +1,5 @@
 const app = require("./app");
-import { loadEnvVariables } from './src/functions/helpers/env';
+import { loadEnvVariables } from './src/controllers/helpers/env';
 
 loadEnvVariables();
 const port = process.env.PORT;

@@ -90,3 +90,15 @@ export const postsDataMock = [
         body: 'body body body'
     }
 ];
+
+export const userInsertDataMock = { id: 'uuidv4', user: 'test_name', password: 'test_password' };
+
+export const userSelectDataMock = { user: 'test_name', password: 'test_password' };
+
+export const validBearer = 'c3RyeWtlRGV2QmVhcmVyVG9rZW4=';
+
+export const unvalidBearer = 'c3RyeWtlRGV12345ggyVG9rZW4=';
+
+export const userIdMock = 'uuidv4';
+
+export const tokenMock = 'token';

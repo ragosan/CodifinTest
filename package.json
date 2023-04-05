@@ -1,8 +1,8 @@
 {
   "scripts": {
     "remove-dist": "del-cli --force ./dist",
-    "build": "npx tsc && mkdir .\\dist\\src\\environment && cp src/environment/.env.local ./dist/src/environment/.env.local && node dist/app.js",
-    "rebuild": "del-cli --force ./dist && npx tsc && mkdir .\\dist\\src\\environment && cp src/environment/.env.local ./dist/src/environment/.env.local && node dist/server.js",
+    "build": "npx tsc && mkdir .\\dist\\src\\environment && cp src/environment/.env.sample ./dist/src/environment/.env.sample && node dist/app.js",
+    "rebuild": "del-cli --force ./dist && npx tsc && mkdir .\\dist\\src\\environment && cp src/environment/.env.sample ./dist/src/environment/.env.sample && node dist/server.js",
     "test": "jest --runInBand",
     "test-coverage": "jest --coverage"
   },

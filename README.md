@@ -33,22 +33,92 @@ To run the test coverage command, we should run the following npm script
 
 ```bash
 npm run test
+npm run test-coverage
 ```
 
 The unit testing code is tested using Jest
 
+## Swagger
+Swagger can be written in JSON or YAML. In this guide, we only use YAML examples, but JSON works equally well. A sample Swagger specification written in YAML looks like:
 
-## Usage
-
-```python
-import foobar
-
-# returns 'words'
-foobar.pluralize('word')
-
-# returns 'geese'
-foobar.pluralize('goose')
-
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+```yaml
+swagger: "2.0"
+info:
+  title: CODIFIN TEST API
+  description: Project Test using NodeJS and TypeScript
+  version: 1.0.0
+host: localhost:3000
+schemes:
+  - http
+paths:
+  /client_credentials:
+    post:
+      summary: Generates an access token
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+  /register:
+    post:
+      summary: Registers a user
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+  /login:
+    post:
+      summary: Register user logs in and obtains a user token
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+  /extract/posts:
+    get:
+      summary: Extracts posts from external api into the database
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+  /extract/comments:
+    get:
+      summary: Extracts comments from external api into the database
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+  /posts:
+    get:
+      summary: Obtains posts from the database
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
+  /posts:
+    get:
+      summary: Obtains comments from the database
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized
 ```

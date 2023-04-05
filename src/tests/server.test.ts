@@ -1,14 +1,16 @@
-import { postsRawDataMock, mockECAuthorizedResponse, mockECUnauthorizedResponse, mockLIAuthorizedResponse, mockLLIUnauthorizedResponse, mockLLCredentialsWrongResponse, mockCCUnauthorizedResponse, mockCCAuthorizedResponse, mockRUUnauthorizedResponse, mockRUAuthorizedResponse, mockUnauthorizedResquest, mockAuthorizedResquest, commentsRawDataMock, mockAuthorizedUserResquest, commentsDataMock } from "./Mocks/ResponseMocks";
+import { postsRawDataMock, mockECAuthorizedResponse, mockECUnauthorizedResponse, mockLIAuthorizedResponse, mockLLIUnauthorizedResponse, mockLLCredentialsWrongResponse, mockCCUnauthorizedResponse, mockCCAuthorizedResponse, mockRUUnauthorizedResponse, mockRUAuthorizedResponse, mockUnauthorizedResquest, mockAuthorizedResquest, commentsRawDataMock, mockAuthorizedUserResquest, commentsDataMock, postsDataMock } from "./Mocks/ResponseMocks";
 const axios = require('axios');
 const request = require("supertest");
 const app = require("../../app");
-const { getCCToken } = require('../functions/GetCCTokenHandler');
-const { registerUser } = require('../functions/RegisterUserHandler');
-const { logIn } = require('../functions/LogInHandler');
-const { extractComments } = require('../functions/ExtractCommentsHandler');
-const { extractPosts } = require('../functions/ExtractPostsHandler');
-const { TokenService } = require('../functions/helpers/TokenService');
-const { DataConnectionService } = require('../functions/helpers/DataConnectionService');
+const { getCCToken } = require('../controllers/GetCCTokenController');
+const { registerUser } = require('../controllers/RegisterUserController');
+const { logIn } = require('../controllers/LogInController');
+const { extractComments } = require('../controllers/ExtractCommentsController');
+const { extractPosts } = require('../controllers/ExtractPostsController');
+const { getComments } = require('../controllers/GetCommentsController');
+const { getPosts } = require('../controllers/GetPostsController');
+const { TokenService } = require('../controllers/helpers/TokenService');
+const { DataConnectionService } = require('../controllers/helpers/DataConnectionService');
 
 jest.mock("axios");
 
@@ -20,11 +22,11 @@ describe("Test the root path", () => {
     });
 });
 
-describe('Testing Handler GetCCToken', () => {
+describe('Testing Controller GetCCToken', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-    test('should 200 if authorization data is not set', async () => {
+    test('should 200 if authorization data is defined correctly', async () => {
         jest.spyOn(TokenService.prototype, 'validateBearerToken').mockReturnValue(true);
         jest.spyOn(TokenService.prototype, 'generateClientCredentialsToken').mockReturnValue('token');
         process.env.CC_JWT_SECRET_KEY='cc_stryke_dev_GWlY37qqLV';
@@ -33,7 +35,7 @@ describe('Testing Handler GetCCToken', () => {
         await getCCToken(req, res);
         expect(res.statusCode).toBe(200);
     });
-    test('should 401 if authorization data is not set', async () => {
+    test('should 401 if authorization data is not set or unvalid', async () => {
         jest.spyOn(TokenService.prototype, 'validateBearerToken').mockReturnValue(false);
         process.env.CC_JWT_SECRET_KEY='cc_stryke_dev_GWlY37qqLV';
         const req = mockUnauthorizedResquest;
@@ -43,11 +45,11 @@ describe('Testing Handler GetCCToken', () => {
     });
 });
 
-describe('Testing Handler RegisterUser', () => {
+describe('Testing Controller RegisterUser', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
-    test('should 200 if authorization data is not set', async () => {
+    test('should 200 if authorization data is defined correctly', async () => {
         jest.spyOn(TokenService.prototype, 'validateClientCredentialsToken').mockReturnValue(true);
         jest.spyOn(DataConnectionService.prototype, 'insertUser').mockReturnValue(true);
         process.env.CC_JWT_SECRET_KEY='cc_stryke_dev_GWlY37qqLV';
@@ -56,7 +58,7 @@ describe('Testing Handler RegisterUser', () => {
         await registerUser(req, res);
         expect(res.statusCode).toBe(200);
     });
-    test('should 401 if authorization data is not set', async () => {
+    test('should 401 if authorization data is not set or unvalid', async () => {
         jest.spyOn(TokenService.prototype, 'validateClientCredentialsToken').mockReturnValue(false);
         process.env.CC_JWT_SECRET_KEY='cc_stryke_dev_GWlY37qqLV';
         const req = mockUnauthorizedResquest;
@@ -66,7 +68,7 @@ describe('Testing Handler RegisterUser', () => {
     });
 });
 
-describe('Testing Handler LogIn', () => {
+describe('Testing Controller LogIn', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -99,7 +101,7 @@ describe('Testing Handler LogIn', () => {
     });
 });
 
-describe('Testing Handler ExtractComments', () => {
+describe('Testing Controller ExtractComments', () => {
     beforeEach(() => {
         process.env.EXTERNAL_API_URL='https://jsonplaceholder.typicode.com/';
         process.env.USER_JWT_SECRET_KEY="user_stryke_dev_OGnCaAhUt3";
@@ -125,7 +127,7 @@ describe('Testing Handler ExtractComments', () => {
     });
 });
 
-describe('Testing Handler ExtractPosts', () => {
+describe('Testing Controller ExtractPosts', () => {
     beforeEach(() => {
         process.env.EXTERNAL_API_URL='https://jsonplaceholder.typicode.com/';
         process.env.USER_JWT_SECRET_KEY="user_stryke_dev_OGnCaAhUt3";
@@ -151,7 +153,7 @@ describe('Testing Handler ExtractPosts', () => {
     });
 });
 
-describe('Testing Handler GetComments', () => {
+describe('Testing Controller GetComments', () => {
     beforeEach(() => {
         process.env.USER_JWT_SECRET_KEY="user_stryke_dev_OGnCaAhUt3";
     });
@@ -163,14 +165,38 @@ describe('Testing Handler GetComments', () => {
         jest.spyOn(DataConnectionService.prototype, 'selectAllComments').mockReturnValue(commentsDataMock);
         const req = mockAuthorizedUserResquest;
         const res = mockECAuthorizedResponse;
-        await extractPosts(req, res);
+        await getComments(req, res);
         expect(res.statusCode).toBe(200);
     });
     test('should 401 if authorization data is not set', async () => {
         jest.spyOn(TokenService.prototype, 'validateUserToken').mockReturnValue(false);
         const req = mockAuthorizedUserResquest;
         const res = mockECUnauthorizedResponse;
-        await extractPosts(req, res);
+        await getComments(req, res);
+        expect(res.statusCode).toBe(401);
+    });
+});
+
+describe('Testing Controller GetPosts', () => {
+    beforeEach(() => {
+        process.env.USER_JWT_SECRET_KEY="user_stryke_dev_OGnCaAhUt3";
+    });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    test('should 200 if authorization data set correctly', async () => {
+        jest.spyOn(TokenService.prototype, 'validateUserToken').mockReturnValue(true);
+        jest.spyOn(DataConnectionService.prototype, 'selectAllPosts').mockReturnValue(postsDataMock);
+        const req = mockAuthorizedUserResquest;
+        const res = mockECAuthorizedResponse;
+        await getPosts(req, res);
+        expect(res.statusCode).toBe(200);
+    });
+    test('should 401 if authorization data is not set', async () => {
+        jest.spyOn(TokenService.prototype, 'validateUserToken').mockReturnValue(false);
+        const req = mockAuthorizedUserResquest;
+        const res = mockECUnauthorizedResponse;
+        await getPosts(req, res);
         expect(res.statusCode).toBe(401);
     });
 });

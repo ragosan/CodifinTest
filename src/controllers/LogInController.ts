@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
 import { DataConnectionService } from './helpers/DataConnectionService'
 import { TokenService } from './helpers/TokenService';
-import { UserDataModel } from '../models/UserDataModel';
 
 export const logIn = async (req, res) => {
     let body = req.body, token: string;

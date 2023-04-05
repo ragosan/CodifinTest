@@ -1,11 +1,11 @@
 import express from 'express';
-import { registerUser } from './src/functions/RegisterUserHandler';
-import { extractPosts } from './src/functions/ExtractPostsHandler';
-import { extractComments } from './src/functions/ExtractCommentsHandler';
-import { getPosts } from './src/functions/GetPostsHandler';
-import { getComments } from './src/functions/GetCommentsHandler';
-import { getCCToken } from './src/functions/GetCCTokenHandler';
-import { logIn } from './src/functions/LogInHandler';
+import { registerUser } from './src/controllers/RegisterUserController';
+import { extractPosts } from './src/controllers/ExtractPostsController';
+import { extractComments } from './src/controllers/ExtractCommentsController';
+import { getPosts } from './src/controllers/GetPostsController';
+import { getComments } from './src/controllers/GetCommentsController';
+import { getCCToken } from './src/controllers/GetCCTokenController';
+import { logIn } from './src/controllers/LogInController';
 
 const app = express();
 const bodyParser = require('body-parser');

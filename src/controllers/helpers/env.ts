@@ -10,7 +10,7 @@ export function loadEnvVariables() {
             __dirname,
             '..',
             '..',
-            'environment/.env.local'
+            'environment/.env.sample'
         );
         console.log('env path: ', envPath);
         dotenv.config({

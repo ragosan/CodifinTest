@@ -4,10 +4,8 @@ import { TokenService } from './helpers/TokenService';
 
 export const extractPosts = async (req, res) => {
     const authorizationHeader: string = req.get('Authorization');
-    console.log(authorizationHeader);
     const tokenService = new TokenService();
     const valid: boolean = tokenService.validateUserToken(authorizationHeader);
-    console.log('Token Valid: ', valid);
     if (!valid) {
         res.status(401).json({ message: "Unauthorized" });
         return;
