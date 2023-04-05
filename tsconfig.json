@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "module": "CommonJS",
+      "target": "es6",
+      "noImplicitAny": false,
+      "preserveConstEnums": true,
+      "sourceMap": true,
+      "outDir": "dist"
+    },
+    "include": ["src/environment/*", "app.ts", "server.ts"],
+    "exclude": ["node_modules", "**/*.spec.ts"]
+  }
